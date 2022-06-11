@@ -8,7 +8,6 @@
 import Foundation
 
 public protocol JPNetworkResource {
-    
     var baseURL: URL { get }
     var endPoint: String { get }
     var method: HttpMethod { get }
@@ -18,10 +17,21 @@ public protocol JPNetworkResource {
     var paramsEncoding: ParameterEncoding { get }
     var authType: AuthType { get }
     var urlRequest: URLRequest? { get }
-    var fileName: String? { get } /* FileName of the downloaded asset */
 }
 
 public extension JPNetworkResource {
+
+    var headers: [String:String] {
+        return [:]
+    }
+    
+    var params: [String:Any] {
+        return [:]
+    }
+    
+    var body: Data? {
+        return nil
+    }
     
     var urlRequest: URLRequest? {
         let urlString = (baseURL.absoluteString + endPoint).trimmingCharacters(in: .whitespacesAndNewlines)
