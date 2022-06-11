@@ -21,3 +21,21 @@ public class JPNetworkResponse {
         self.httpResponse = httpResponse
     }
 }
+
+extension JPNetworkResponse : CustomStringConvertible {
+    public var description: String {
+        guard let data , let dataString = String(data: data, encoding: .utf8) else {
+            return "\(statusCode)"
+        }
+        return "\(statusCode):\(dataString)"
+    }
+}
+
+extension JPNetworkResponse : CustomDebugStringConvertible {
+    public var debugDescription: String {
+        guard let data , let dataString = String(data: data, encoding: .utf8) else {
+            return "\(statusCode)"
+        }
+        return "\(statusCode):\(dataString)"
+    }
+}
