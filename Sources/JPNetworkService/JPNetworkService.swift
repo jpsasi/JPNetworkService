@@ -11,7 +11,7 @@ public class JPNetworkService: JPWebService {
         self.urlSession = urlSession
     }
     
-    func load(networkResource: JPNetworkResource) async throws -> JPNetworkResponse {
+    public func load(networkResource: JPNetworkResource) async throws -> JPNetworkResponse {
         guard let urlRequest = networkResource.urlRequest else {
             throw JPNetworkError.invalidUrl
         }
