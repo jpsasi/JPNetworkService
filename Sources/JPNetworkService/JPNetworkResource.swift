@@ -59,7 +59,35 @@ public extension JPNetworkResource {
             }
             
             if method == .post || method == .delete || method == .put {
+                if let encodedParams = encodedBodyParameters() {
+                    urlRequest.httpBody = encodedParams
+                } else if let encodedParams = encodedParameters() {
+                    urlRequest.httpBody = encodedParams
+                }
                 
+                switch paramsEncoding {
+                    case .url:
+                        urlRequest.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
+                    case .json:
+                        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                    case let .multipart(boundary: boundaryString):
+                        urlRequest.setValue("multipart/form-data; boundary=\(boundaryString)", forHTTPHeaderField: "Content-Type")
+                    default:
+                        break
+                }
+                
+                switch authType {
+                    case let .basic(userName, password):
+                        let authStr  = userName + ":" + password
+                        let authData = authStr.data(using: String.Encoding.utf8)!
+                        let encodedString = authData.base64EncodedString(options: Data.Base64EncodingOptions.init(rawValue: 0))
+                        urlRequest.setValue("Basic \(encodedString)", forHTTPHeaderField: "Authorization")
+                        break
+                    case let .token(token: authToken):
+                        urlRequest.setValue("\(authToken)", forHTTPHeaderField: "x-fi-access-token")
+                    case .none:
+                        break
+                }
             }
             return urlRequest
         }
